@@ -1,9 +1,7 @@
 **Mobile Development 2023/24 Portfolio**
-# Overview
+# Overview (198 words)
 
 Student ID: `lesleyf`
-
-# Project Overview (198 words)
 
 ## Chess GPT
 
