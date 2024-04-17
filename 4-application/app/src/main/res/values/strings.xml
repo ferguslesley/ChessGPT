@@ -11,4 +11,5 @@
     <string name="tab_2_text">Tab 2 Text</string>
     <string name="chess_board_description">Chess Board</string>
     <string name="king_white_description">White King</string>
+    <string name="grid_cell">Grid Cell</string>
 </resources>

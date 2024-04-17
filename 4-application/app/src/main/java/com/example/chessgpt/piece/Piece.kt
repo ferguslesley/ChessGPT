@@ -1,5 +1,7 @@
 package com.example.chessgpt.piece
 
+import com.example.chessgpt.R
+
 open class Piece (
     var orthogonalMovement: Int,
     val diagonalMovement: Int,
@@ -7,7 +9,8 @@ open class Piece (
     val color: PieceColor,
 
     var moves: MutableList<IntArray> = mutableListOf(),
-    val boardSize: Int = 8
+    val boardSize: Int = 8,
+    open var image: Int = R.drawable.king_white
 ){
 
     open fun calculateMoves() {

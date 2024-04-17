@@ -1,7 +1,16 @@
 package com.example.chessgpt.piece
+import com.example.chessgpt.R
 import com.example.chessgpt.board.*
 
 class Pawn(pos: Array<Int>, color: PieceColor) : Piece(1, 0, pos, color) {
+    init {
+        if (color == PieceColor.WHITE) {
+            image = R.drawable.pawn_white
+        } else {
+            image = R.drawable.pawn_black
+        }
+
+    }
     override fun calculateMoves() {
         // Get forward orthogonal movement
         super.calculateMoves()

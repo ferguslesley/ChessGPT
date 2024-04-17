@@ -6,8 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/board_image"
+            android:layout_width="411dp"
+            android:layout_height="411dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/chess_board_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/chess_board"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
-            android:id="@+id/instructionText"
+            android:id="@+id/instruction_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -16,29 +29,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/board_image"
+        <GridLayout
+            android:id="@+id/chessboard_grid"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/chess_board"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/chess_board_description" />
+            android:layout_height="0dp"
+            android:columnCount="8"
+            android:rowCount="8"
+            app:layout_constraintBottom_toBottomOf="@+id/board_image"
+            app:layout_constraintEnd_toEndOf="@id/board_image"
+            app:layout_constraintStart_toStartOf="@id/board_image"
+            app:layout_constraintTop_toTopOf="@+id/board_image">
 
-<!--    Pieces -->
+        </GridLayout>
 
-        <ImageView
-            android:id="@+id/king_white_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/king_white_description"
-            android:scaleType="fitCenter"
-            android:src="@drawable/king_white" />
 
         <Button
-            android:id="@+id/endGame"
+            android:id="@+id/end_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -48,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/startGame"
+            android:id="@+id/start_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
@@ -58,12 +64,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
-            android:id="@+id/getMoves"
+            android:id="@+id/get_moves"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@string/get_moves"
-            app:layout_constraintBottom_toTopOf="@+id/startGame"
+            app:layout_constraintBottom_toTopOf="@+id/start_game"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

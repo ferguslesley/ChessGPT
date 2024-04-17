@@ -12,6 +12,7 @@ import com.example.chessgpt.piece.Rook
 var boardList:MutableList<MutableList<Piece?>> = MutableList(8) {MutableList(8) {null} }
 
 fun setupBoard() {
+    boardList = MutableList(8) { MutableList(8) {null} }
     placePiece(Rook(arrayOf(0,0), PieceColor.WHITE), arrayOf(0,0))
     placePiece(Knight(arrayOf(1,0), PieceColor.WHITE), arrayOf(1,0))
     placePiece(Bishop(arrayOf(2, 0), PieceColor.WHITE), arrayOf(2,0))
