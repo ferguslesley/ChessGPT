@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">mob-dev-portfolio</string>
+    <string name="app_name">ChessGPT</string>
+    <string name="instruction_text">Default Instruction Text</string>
+    <string name="end_game">End Game</string>
+    <string name="start_game">Start Game</string>
+    <string name="starting_game">Starting a new game!</string>
+    <string name="get_moves">Get Possible Moves</string>
+    <string name="first_move_text">Make Your First Move!</string>
+    <string name="hi">hi</string>
+    <string name="tab_1_text">Tab 1 Text</string>
+    <string name="tab_2_text">Tab 2 Text</string>
+    <string name="chess_board_description">Chess Board</string>
+    <string name="king_white_description">White King</string>
 </resources>
