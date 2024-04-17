@@ -20,14 +20,14 @@ open class Piece (
         // TODO: Handle Discovered Checks
     }
 
-    fun getOrthogonals() {
+    open fun getOrthogonals() {
         for (i in 1..orthogonalMovement) {
             // +y
-            if(pos[1] + i <= boardSize) {
+            if(pos[1] + i < boardSize) {
                 moves.add(intArrayOf(pos[0], pos[1] + i))
             }
             // +x
-            if(pos[0] + i <= boardSize) {
+            if(pos[0] + i < boardSize) {
                 moves.add(intArrayOf(pos[0] + i, pos[1]))
             }
             // -y
@@ -44,11 +44,11 @@ open class Piece (
     open fun getDiagonals() {
         for (i in 1..diagonalMovement) {
             // -x +y
-            if (pos[0] - i >= 0 && pos[1] + i <= boardSize) {
+            if (pos[0] - i >= 0 && pos[1] + i < boardSize) {
                 moves.add(intArrayOf(pos[0] - i, pos[1] + i))
             }
             // +x +y
-            if (pos[0] + i <= boardSize && pos[1] + i <= boardSize) {
+            if (pos[0] + i < boardSize && pos[1] + i < boardSize) {
                 moves.add(intArrayOf(pos[0] + i, pos[1] + i))
             }
             // -x -y
@@ -56,7 +56,7 @@ open class Piece (
                 moves.add(intArrayOf(pos[0] - i, pos[1] - i))
             }
             // +x -y
-            if (pos[0] + i <= boardSize && pos[1] - i >= 0) {
+            if (pos[0] + i < boardSize && pos[1] - i >= 0) {
                 moves.add(intArrayOf(pos[0] + i, pos[1] - i))
             }
         }

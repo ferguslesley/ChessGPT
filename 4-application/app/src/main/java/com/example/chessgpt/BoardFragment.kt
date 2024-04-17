@@ -3,6 +3,7 @@ package com.example.chessgpt
 import android.media.Image
 import android.os.Bundle
 import android.text.Layout
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,6 +103,9 @@ class BoardFragment : Fragment() {
                 pieceImage.setImageResource(pieceObj!!.image)
                 chessboardGrid.addView(pieceImage)
                 movePiece(pieceImage, j, i)
+                pieceImage.setOnClickListener{
+                    onPieceClick(pieceObj)
+                }
             }
         }
     }
@@ -124,6 +128,9 @@ class BoardFragment : Fragment() {
                 pieceImage.setImageResource(pieceObj!!.image)
                 chessboardGrid.addView(pieceImage)
                 movePiece(pieceImage, j, i)
+                pieceImage.setOnClickListener{
+                    onPieceClick(pieceObj)
+                }
             }
         }
     }
@@ -132,11 +139,35 @@ class BoardFragment : Fragment() {
         // Calculate the position of the cell
         val layoutParams = pieceImage.layoutParams as GridLayout.LayoutParams
         layoutParams.rowSpec = GridLayout.spec(7 - row)
-        layoutParams.columnSpec = GridLayout.spec(7 - col)
+        layoutParams.columnSpec = GridLayout.spec(col)
         pieceImage.layoutParams = layoutParams
 
         // Make the image visible
         pieceImage.visibility = View.VISIBLE
+    }
+
+    private fun onPieceClick(piece: Piece) {
+        val validMoves : Array<IntArray> = piece.getMoves()
+        for (pos in validMoves) {
+            showDot(pos)
+        }
+    }
+
+    private fun showDot(pos: IntArray) {
+        val cellWidth = boardImage.width / 16
+        val cellHeight = boardImage.height / 16
+        val pieceImage = ImageView(requireContext())
+        val layoutParams = GridLayout.LayoutParams().apply {
+            width = cellWidth
+            height = cellHeight
+            columnSpec = GridLayout.spec(pos[0])
+            rowSpec = GridLayout.spec(7 - pos[1])
+            setGravity(Gravity.CENTER)
+        }
+        pieceImage.layoutParams = layoutParams
+        pieceImage.setImageResource(R.drawable.baseline_circle_24)
+        pieceImage.visibility = View.VISIBLE
+        chessboardGrid.addView(pieceImage)
     }
 
     private fun onEndButtonClick() {
