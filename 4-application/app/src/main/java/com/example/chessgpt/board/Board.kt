@@ -9,8 +9,14 @@ import com.example.chessgpt.piece.PieceColor
 import com.example.chessgpt.piece.Queen
 import com.example.chessgpt.piece.Rook
 
-var boardList:MutableList<MutableList<Piece?>> = MutableList(8) {MutableList(8) {null} }
+var boardList:MutableList<MutableList<Piece?>> = MutableList(8) {
+    MutableList(8) { null }
+}
 const val boardSize: Int = 8
+var whiteKing = King(arrayOf(4, 0), PieceColor.WHITE)
+var currentBoardState: MutableList<MutableList<Piece?>> = MutableList(8) {
+    MutableList(8) { null }
+}
 
 fun setupBoard() {
     boardList = MutableList(8) { MutableList(8) {null} }
@@ -18,7 +24,7 @@ fun setupBoard() {
     placePiece(Knight(arrayOf(1,0), PieceColor.WHITE), arrayOf(1,0))
     placePiece(Bishop(arrayOf(2, 0), PieceColor.WHITE), arrayOf(2,0))
     placePiece(Queen(arrayOf(3,0), PieceColor.WHITE), arrayOf(3,0))
-    placePiece(King(arrayOf(4, 0), PieceColor.WHITE), arrayOf(4,0))
+    placePiece(whiteKing, arrayOf(4,0))
     placePiece(Bishop(arrayOf(5, 0), PieceColor.WHITE), arrayOf(5,0))
     placePiece(Knight(arrayOf(6, 0), PieceColor.WHITE), arrayOf(6,0))
     placePiece(Rook(arrayOf(7,0), PieceColor.WHITE), arrayOf(7,0))
@@ -53,18 +59,88 @@ fun setupBoard() {
 }
 
 fun placePiece(piece: Piece, pos: Array<Int>) {
-    val(row, col) = pos
-    boardList[row][col] = piece
+    val(col, row) = pos
+    boardList[col][row] = piece
 }
 
-fun getPiece(pos: Array<Int>) : Piece? {
-    val(row, col) = pos
-    return boardList[row][col]
+fun movePiece(piece: Piece, col: Int, row: Int) {
+    val oldX = piece.pos[0]
+    val oldY = piece.pos[1]
+
+    // Move the piece, replace old position with null
+    boardList[col][row] = piece
+    boardList[oldX][oldY] = null
+    piece.pos = arrayOf(col, row)
 }
 
-fun isValid(col: Int, row: Int) : Boolean {
-    return row in 0 until boardSize &&
-            col in 0 until boardSize &&
-            (boardList[col][row] == null ||
-                    boardList[col][row]?.color == PieceColor.BLACK)
+fun getPiece(givenBoardState: MutableList<MutableList<Piece?>>,pos: Array<Int>) : Piece? {
+    val (col, row) = pos
+    return givenBoardState[col][row]
+}
+
+fun isValid(piece: Piece, newCol: Int, newRow: Int) : Boolean {
+    val valid = newRow in 0 until boardSize &&
+            newCol in 0 until boardSize &&
+            (boardList[newCol][newRow] == null ||
+                    boardList[newCol][newRow]?.color?.oppositeColor() == piece.color)
+    return valid
+}
+
+fun wouldBeDangerous(oldPos: Array<Int>, newCol: Int, newRow: Int): Boolean {
+    // Create a temporary board to simulate a move
+    val boardCopy = createBoardCopy()
+
+    // Simulate the move
+    val piece = boardCopy[oldPos[0]][oldPos[1]]
+    boardCopy[newCol][newRow] = piece
+    boardCopy[oldPos[0]][oldPos[1]] = null
+
+    // Check if this board state means king is in check
+    return isDangerous(boardCopy)
+}
+
+fun isDangerous(boardState: MutableList<MutableList<Piece?>>) : Boolean {
+    var isDangerous = false
+    var whiteKingPos: IntArray
+    for (i in 0 until boardSize) {
+        for (j in 0 until boardSize) {
+            if (boardState[i][j] != null && boardState[i][j]?.color == PieceColor.BLACK) {
+                whiteKingPos = findWhiteKing(boardState)
+                for (pos in boardState[i][j]!!.getLineOfSight(boardState)) {
+                    if (pos.contentEquals(whiteKingPos)) {
+                        isDangerous = true
+                    }
+                }
+            }
+        }
+    }
+    return isDangerous
+}
+
+private fun findWhiteKing(boardState: MutableList<MutableList<Piece?>>) : IntArray {
+    for (col in boardState.indices) {
+        for (row in boardState[col].indices) {
+            val piece: Piece? = boardState[col][row]
+            if (piece is King && piece.color == PieceColor.WHITE) {
+                return intArrayOf(col, row)
+            }
+        }
+    }
+    return intArrayOf(-1, -1)
+}
+
+fun createBoardCopy(): MutableList<MutableList<Piece?>> {
+    // Create a new mutable list instead of referring to the original
+    val boardCopy = mutableListOf<MutableList<Piece?>>()
+
+    // Fill new list with copies of data from original
+    for (innerList in boardList) {
+        val innerBoardCopy = mutableListOf<Piece?>()
+        for (piece in innerList) {
+            val pieceCopy = piece?.let { piece.deepCopyPiece() }
+            innerBoardCopy.add(pieceCopy)
+        }
+        boardCopy.add(innerBoardCopy)
+    }
+    return boardCopy
 }

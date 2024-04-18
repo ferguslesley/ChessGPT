@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.chessgpt.board.boardList
+import com.example.chessgpt.board.movePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
@@ -120,30 +121,6 @@ class BoardFragment : Fragment() {
         }
     }
 
-    private fun movePiece(piece: Piece, col: Int, row: Int) {
-        var oldX = -1
-        var oldY = -1
-
-        // Find position of piece in boardList
-        outerLoop@ for (i in boardList.indices) {
-            for (j in boardList[i].indices) {
-                if (boardList[i][j] === piece) {
-                    oldX = i
-                    oldY = j
-                    break@outerLoop
-                }
-            }
-        }
-
-        // Move the piece, replace old position with null
-        boardList[col][row] = piece
-        boardList[oldX][oldY] = null
-        piece.pos = arrayOf(col, row)
-
-        // Draw the pieces in their new positions
-        drawPieces()
-    }
-
     private fun onPieceClick(piece: Piece) {
         drawPieces()
         val validMoves : Array<IntArray> = piece.getMoves()
@@ -168,6 +145,8 @@ class BoardFragment : Fragment() {
         pieceImage.visibility = View.VISIBLE
         pieceImage.setOnClickListener {
             movePiece(piece, pos[0], pos[1])
+            // Draw the pieces in their new positions
+            drawPieces()
         }
         chessboardGrid.addView(pieceImage)
     }

@@ -15,28 +15,28 @@ class Knight(pos : Array<Int>, color: PieceColor) : Piece(0, 0, pos, color) {
     }
     override fun calculateMoves() {
         moves = mutableListOf()
-        if (isValid(pos[0] - 2, pos[1] + 1)) {
+        if (isValid(this, pos[0] - 2, pos[1] + 1)) {
             moves.add(intArrayOf(pos[0] - 2, pos[1] + 1))
         }
-        if (isValid(pos[0] - 1, pos[1] + 2)) {
+        if (isValid(this, pos[0] - 1, pos[1] + 2)) {
             moves.add(intArrayOf(pos[0] - 1, pos[1] + 2))
         }
-        if (isValid(pos[0] + 1, pos[1] + 2)) {
+        if (isValid(this, pos[0] + 1, pos[1] + 2)) {
             moves.add(intArrayOf(pos[0] + 1, pos[1] + 2))
         }
-        if (isValid(pos[0] + 2, pos[1] + 1)) {
+        if (isValid(this, pos[0] + 2, pos[1] + 1)) {
             moves.add(intArrayOf(pos[0] + 2, pos[1] + 1))
         }
-        if (isValid(pos[0] + 2, pos[1] - 1)) {
+        if (isValid(this, pos[0] + 2, pos[1] - 1)) {
             moves.add(intArrayOf(pos[0] + 2, pos[1] - 1))
         }
-        if (isValid(pos[0] + 1, pos[1] - 2)) {
+        if (isValid(this, pos[0] + 1, pos[1] - 2)) {
             moves.add(intArrayOf(pos[0] + 1, pos[1] - 2))
         }
-        if (isValid(pos[0] - 1, pos[1] - 2)) {
+        if (isValid(this, pos[0] - 1, pos[1] - 2)) {
             moves.add(intArrayOf(pos[0] - 1, pos[1] - 2))
         }
-        if (isValid(pos[0] - 2, pos[1] - 1)) {
+        if (isValid(this, pos[0] - 2, pos[1] - 1)) {
             moves.add(intArrayOf(pos[0] - 2, pos[1] - 1))
         }
     }
