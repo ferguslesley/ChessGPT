@@ -13,12 +13,10 @@ var boardList:MutableList<MutableList<Piece?>> = MutableList(8) {
     MutableList(8) { null }
 }
 const val boardSize: Int = 8
-var whiteKing = King(arrayOf(4, 0), PieceColor.WHITE)
-var currentBoardState: MutableList<MutableList<Piece?>> = MutableList(8) {
-    MutableList(8) { null }
-}
+var whiteKing =  King(arrayOf(4, 0), PieceColor.WHITE)
 
 fun setupBoard() {
+    whiteKing = King(arrayOf(4, 0), PieceColor.WHITE)
     boardList = MutableList(8) { MutableList(8) {null} }
     placePiece(Rook(arrayOf(0,0), PieceColor.WHITE), arrayOf(0,0))
     placePiece(Knight(arrayOf(1,0), PieceColor.WHITE), arrayOf(1,0))

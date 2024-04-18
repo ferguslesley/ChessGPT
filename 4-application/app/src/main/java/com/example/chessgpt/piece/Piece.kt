@@ -2,14 +2,12 @@ package com.example.chessgpt.piece
 
 import com.example.chessgpt.R
 import com.example.chessgpt.board.boardList
-import com.example.chessgpt.board.boardSize
-import com.example.chessgpt.board.getPiece
 import com.example.chessgpt.board.isValid
 import com.example.chessgpt.board.wouldBeDangerous
 
 open class Piece (
-    var orthogonalMovement: Int,
-    val diagonalMovement: Int,
+    private var orthogonalMovement: Int,
+    private val diagonalMovement: Int,
     var pos: Array<Int>,
     val color: PieceColor,
 
@@ -19,21 +17,14 @@ open class Piece (
 
     open fun calculateMoves() {
         moves = mutableListOf()
-        getOrthogonals()
-        getDiagonals()
+        getOrthogonals(boardList)
+        getDiagonals(boardList)
     }
 
     open fun calculateMoves(givenBoardState: MutableList<MutableList<Piece?>>) {
         moves = mutableListOf()
         getOrthogonals(givenBoardState)
         getDiagonals(givenBoardState)
-    }
-
-    open fun getOrthogonals() {
-        getOrthPositY(boardList)
-        getOrthNegatY(boardList)
-        getOrthPositX(boardList)
-        getOrthNegatX(boardList)
     }
 
     open fun getOrthogonals(givenBoardState: MutableList<MutableList<Piece?>>) {
@@ -121,13 +112,6 @@ open class Piece (
             }
             i++
         }
-    }
-
-    open fun getDiagonals() {
-        getDiagUpLeft(boardList)
-        getDiagUpRight(boardList)
-        getDiagDownRight(boardList)
-        getDiagDownLeft(boardList)
     }
 
     open fun getDiagonals(givenBoardState: MutableList<MutableList<Piece?>>) {

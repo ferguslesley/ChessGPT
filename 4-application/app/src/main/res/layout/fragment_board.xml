@@ -8,8 +8,8 @@
 
         <ImageView
             android:id="@+id/board_image"
-            android:layout_width="411dp"
-            android:layout_height="411dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/chess_board_description"
             android:scaleType="fitCenter"
