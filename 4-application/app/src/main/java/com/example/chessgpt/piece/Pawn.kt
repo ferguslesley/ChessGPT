@@ -19,15 +19,8 @@ class Pawn(pos: Array<Int>, color: PieceColor) : Piece(1, 0, pos, color) {
     }
 
     override fun getOrthogonals() {
-        if(color == PieceColor.WHITE) {
-            if(pos[1] + 1 < boardSize) {
-                moves.add(intArrayOf(pos[0], pos[1] + 1))
-            }
-        }
-        if(color == PieceColor.BLACK) {
-            if(pos[1] - 1 >= 0) {
-                moves.add(intArrayOf(pos[0], pos[1] - 1))
-            }
+        if(pos[1] + 1 < boardSize && getPiece(arrayOf(pos[0], pos[1] + 1)) == null) {
+            moves.add(intArrayOf(pos[0], pos[1] + 1))
         }
     }
 

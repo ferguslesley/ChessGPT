@@ -10,6 +10,7 @@ import com.example.chessgpt.piece.Queen
 import com.example.chessgpt.piece.Rook
 
 var boardList:MutableList<MutableList<Piece?>> = MutableList(8) {MutableList(8) {null} }
+const val boardSize: Int = 8
 
 fun setupBoard() {
     boardList = MutableList(8) { MutableList(8) {null} }
@@ -59,4 +60,11 @@ fun placePiece(piece: Piece, pos: Array<Int>) {
 fun getPiece(pos: Array<Int>) : Piece? {
     val(row, col) = pos
     return boardList[row][col]
+}
+
+fun isValid(col: Int, row: Int) : Boolean {
+    return row in 0 until boardSize &&
+            col in 0 until boardSize &&
+            (boardList[col][row] == null ||
+                    boardList[col][row]?.color == PieceColor.BLACK)
 }

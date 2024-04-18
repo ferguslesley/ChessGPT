@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import com.example.chessgpt.board.boardList
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.piece.Piece
+import com.example.chessgpt.piece.PieceColor
 
 class BoardFragment : Fragment() {
 
@@ -50,10 +51,8 @@ class BoardFragment : Fragment() {
 
     private fun onStartButtonClick() {
         Toast.makeText(requireContext(), "Starting Game!", Toast.LENGTH_SHORT).show()
-        setupGrid()
         setupBoard()
-        createWhitePieces()
-        createBlackPieces()
+        drawPieces()
     }
 
     private fun setupGrid() {
@@ -76,84 +75,84 @@ class BoardFragment : Fragment() {
                 val layoutParams = GridLayout.LayoutParams().apply {
                     width = cellWidth
                     height = cellHeight
-                    rowSpec = GridLayout.spec(i)
-                    columnSpec = GridLayout.spec(j)
+                    columnSpec = GridLayout.spec(i)
+                    rowSpec = GridLayout.spec(7 - j)
                 }
                 cellView.layoutParams = layoutParams
+                cellView.setOnClickListener {
+                    drawPieces() // clears dots
+                }
                 chessboardGrid.addView(cellView)
             }
         }
     }
 
-    private fun createWhitePieces() {
+    private fun drawPieces() {
+        setupGrid()
+        createPieces()
+    }
+
+    private fun createPieces() {
         val cellWidth = boardImage.width / 8
         val cellHeight = boardImage.height / 8
         for (i in 0 .. 7) {
-            for (j in 0 .. 1) {
-                val pieceImage = ImageView(requireContext())
+            for (j in 0 .. 7) {
                 val pieceObj: Piece? = boardList[i][j]
-                val layoutParams = GridLayout.LayoutParams().apply {
-                    width = cellWidth
-                    height = cellHeight
-                    rowSpec = GridLayout.spec(j)
-                    columnSpec = GridLayout.spec(i)
-                }
-                pieceImage.layoutParams = layoutParams
-                pieceImage.visibility = View.INVISIBLE
-                pieceImage.setImageResource(pieceObj!!.image)
-                chessboardGrid.addView(pieceImage)
-                movePiece(pieceImage, j, i)
-                pieceImage.setOnClickListener{
-                    onPieceClick(pieceObj)
+                if (pieceObj != null) {
+                    val pieceImage = ImageView(requireContext())
+                    val layoutParams = GridLayout.LayoutParams().apply {
+                        width = cellWidth
+                        height = cellHeight
+                        columnSpec = GridLayout.spec(i)
+                        rowSpec = GridLayout.spec(7 - j)
+                    }
+                    pieceImage.layoutParams = layoutParams
+                    pieceImage.setImageResource(pieceObj.image)
+                    chessboardGrid.addView(pieceImage)
+                    pieceImage.visibility = View.VISIBLE
+                    if (pieceObj.color == PieceColor.WHITE) {
+                        pieceImage.setOnClickListener{
+                            onPieceClick(pieceObj)
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun createBlackPieces() {
-        val cellWidth = boardImage.width / 8
-        val cellHeight = boardImage.height / 8
-        for (i in 0 .. 7) {
-            for (j in 6 .. 7) {
-                val pieceImage = ImageView(requireContext())
-                val pieceObj: Piece? = boardList[i][j]
-                val layoutParams = GridLayout.LayoutParams().apply {
-                    width = cellWidth
-                    height = cellHeight
-                    rowSpec = GridLayout.spec(j)
-                    columnSpec = GridLayout.spec(i)
-                }
-                pieceImage.layoutParams = layoutParams
-                pieceImage.visibility = View.INVISIBLE
-                pieceImage.setImageResource(pieceObj!!.image)
-                chessboardGrid.addView(pieceImage)
-                movePiece(pieceImage, j, i)
-                pieceImage.setOnClickListener{
-                    onPieceClick(pieceObj)
+    private fun movePiece(piece: Piece, col: Int, row: Int) {
+        var oldX = -1
+        var oldY = -1
+
+        // Find position of piece in boardList
+        outerLoop@ for (i in boardList.indices) {
+            for (j in boardList[i].indices) {
+                if (boardList[i][j] === piece) {
+                    oldX = i
+                    oldY = j
+                    break@outerLoop
                 }
             }
         }
-    }
 
-    private fun movePiece(pieceImage: ImageView, row: Int, col: Int) {
-        // Calculate the position of the cell
-        val layoutParams = pieceImage.layoutParams as GridLayout.LayoutParams
-        layoutParams.rowSpec = GridLayout.spec(7 - row)
-        layoutParams.columnSpec = GridLayout.spec(col)
-        pieceImage.layoutParams = layoutParams
+        // Move the piece, replace old position with null
+        boardList[col][row] = piece
+        boardList[oldX][oldY] = null
+        piece.pos = arrayOf(col, row)
 
-        // Make the image visible
-        pieceImage.visibility = View.VISIBLE
+        // Draw the pieces in their new positions
+        drawPieces()
     }
 
     private fun onPieceClick(piece: Piece) {
+        drawPieces()
         val validMoves : Array<IntArray> = piece.getMoves()
         for (pos in validMoves) {
-            showDot(pos)
+            showDot(piece, pos)
         }
     }
 
-    private fun showDot(pos: IntArray) {
+    private fun showDot(piece: Piece, pos: IntArray) {
         val cellWidth = boardImage.width / 16
         val cellHeight = boardImage.height / 16
         val pieceImage = ImageView(requireContext())
@@ -167,6 +166,9 @@ class BoardFragment : Fragment() {
         pieceImage.layoutParams = layoutParams
         pieceImage.setImageResource(R.drawable.baseline_circle_24)
         pieceImage.visibility = View.VISIBLE
+        pieceImage.setOnClickListener {
+            movePiece(piece, pos[0], pos[1])
+        }
         chessboardGrid.addView(pieceImage)
     }
 

@@ -1,6 +1,10 @@
 package com.example.chessgpt.piece
 
 import com.example.chessgpt.R
+import com.example.chessgpt.board.boardList
+import com.example.chessgpt.board.boardSize
+import com.example.chessgpt.board.getPiece
+import com.example.chessgpt.board.isValid
 
 open class Piece (
     var orthogonalMovement: Int,
@@ -9,7 +13,6 @@ open class Piece (
     val color: PieceColor,
 
     var moves: MutableList<IntArray> = mutableListOf(),
-    val boardSize: Int = 8,
     open var image: Int = R.drawable.king_white
 ){
 
@@ -21,44 +24,128 @@ open class Piece (
     }
 
     open fun getOrthogonals() {
-        for (i in 1..orthogonalMovement) {
-            // +y
-            if(pos[1] + i < boardSize) {
-                moves.add(intArrayOf(pos[0], pos[1] + i))
+        getOrthPositY()
+        getOrthNegatY()
+        getOrthPositX()
+        getOrthNegatX()
+    }
+
+    private fun getOrthPositY() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= orthogonalMovement && isValid(pos[0], pos[1] + i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0], pos[1] + i))
+
+            if (boardList[pos[0]][pos[1] + i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // +x
-            if(pos[0] + i < boardSize) {
-                moves.add(intArrayOf(pos[0] + i, pos[1]))
+            i++
+        }
+    }
+
+    private fun getOrthNegatY() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= orthogonalMovement && isValid(pos[0], pos[1] - i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0], pos[1] - i))
+
+            if (boardList[pos[0]][pos[1] - i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // -y
-            if(pos[1] - i >= 0) {
-                moves.add(intArrayOf(pos[0], pos[1] - i))
+            i++
+        }
+    }
+
+    private fun getOrthPositX() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= orthogonalMovement && isValid(pos[0] + i, pos[1]) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] + i, pos[1]))
+
+            if (boardList[pos[0] + i][pos[1]]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // -x
-            if(pos[0] - i >= 0) {
-                moves.add(intArrayOf(pos[0] - i, pos[1]))
+            i++
+        }
+    }
+
+    private fun getOrthNegatX() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= orthogonalMovement && isValid(pos[0] - i, pos[1]) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] - i, pos[1]))
+
+            if (boardList[pos[0] - i][pos[1]]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
+            i++
         }
     }
 
     open fun getDiagonals() {
-        for (i in 1..diagonalMovement) {
-            // -x +y
-            if (pos[0] - i >= 0 && pos[1] + i < boardSize) {
-                moves.add(intArrayOf(pos[0] - i, pos[1] + i))
+        getDiagUpLeft()
+        getDiagUpRight()
+        getDiagDownRight()
+        getDiagDownLeft()
+    }
+
+    private fun getDiagUpLeft() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= diagonalMovement && isValid(pos[0] - i, pos[1] + i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] - i, pos[1] + i))
+
+            if (boardList[pos[0] - i][pos[1] + i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // +x +y
-            if (pos[0] + i < boardSize && pos[1] + i < boardSize) {
-                moves.add(intArrayOf(pos[0] + i, pos[1] + i))
+            i++
+        }
+    }
+
+    private fun getDiagUpRight() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= diagonalMovement && isValid(pos[0] + i, pos[1] + i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] + i, pos[1] + i))
+
+            if (boardList[pos[0] + i][pos[1] + i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // -x -y
-            if (pos[0] - i >= 0 && pos[1] - i >= 0) {
-                moves.add(intArrayOf(pos[0] - i, pos[1] - i))
+            i++
+        }
+    }
+
+    private fun getDiagDownRight() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= diagonalMovement && isValid(pos[0] + i, pos[1] - i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] + i, pos[1] - i))
+
+            if (boardList[pos[0] + i][pos[1] - i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
-            // +x -y
-            if (pos[0] + i < boardSize && pos[1] - i >= 0) {
-                moves.add(intArrayOf(pos[0] + i, pos[1] - i))
+            i++
+        }
+    }
+
+    private fun getDiagDownLeft() {
+        var i = 1
+        var foundBlackPiece = false
+        while (i <= diagonalMovement && isValid(pos[0] - i, pos[1] - i) && !foundBlackPiece) {
+            moves.add(intArrayOf(pos[0] - i, pos[1] - i))
+
+            if (boardList[pos[0] - i][pos[1] - i]?.color == PieceColor.BLACK) {
+                // Should be valid when it hits a black piece, but go no further
+                foundBlackPiece = true
             }
+            i++
         }
     }
 
