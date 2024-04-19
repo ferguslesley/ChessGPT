@@ -1,7 +1,6 @@
-package com.example.chessgpt
+package com.example.chessgpt.openai
 
 import android.content.Context
-import com.example.chessgpt.openai.sendRequest
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.Callable

@@ -1,8 +1,6 @@
 package com.example.chessgpt
 
-import android.media.Image
 import android.os.Bundle
-import android.text.Layout
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -23,10 +20,10 @@ import com.example.chessgpt.board.movePiece
 import com.example.chessgpt.board.placePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.board.whiteKingDead
+import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
@@ -211,12 +208,6 @@ class BoardFragment : Fragment() {
         val newPos = convertToIndex(newChessPos)
         val pos = convertToIndex(chessPos)
         val piece = initPiece(pieceToMove)
-
-        println("Piece: $pieceToMove")
-        println("pos1: $chessPos")
-        println("pos1 array: ${pos.joinToString()}")
-        println("pos2: $newChessPos")
-        println("pos2 array: ${newPos.joinToString()}")
 
         placePiece(piece, arrayOf(pos[0], pos[1]))
         aiMoves.add(movePiece(piece, newPos[0], newPos[1]))

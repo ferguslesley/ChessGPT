@@ -46,7 +46,6 @@ fun sendRequest(messages: JSONArray, context: Context): String {
         }
         reader.close()
         Log.i("OpenAI", "Messages: $messages")
-        Log.i("OpenAI", "Full Response: $response")
         Log.i("OpenAI", "Response: ${extractContent(response.toString())}")
         return extractContent(response.toString())
     } else {
