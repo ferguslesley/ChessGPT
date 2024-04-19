@@ -7,6 +7,9 @@ android {
     namespace 'com.example.chessgpt'
     compileSdk 33
 
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
     defaultConfig {
         applicationId "com.example.chessgpt"
         minSdk 33
@@ -21,6 +24,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            resValue("string", "api_key", localProperties['api.key'])
         }
     }
     compileOptions {

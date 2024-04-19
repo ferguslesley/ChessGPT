@@ -59,16 +59,37 @@ fun setupBoard() {
 fun placePiece(piece: Piece, pos: Array<Int>) {
     val(col, row) = pos
     boardList[col][row] = piece
+    piece.pos = pos
 }
 
-fun movePiece(piece: Piece, col: Int, row: Int) {
+fun movePiece(piece: Piece, col: Int, row: Int): String {
     val oldX = piece.pos[0]
     val oldY = piece.pos[1]
 
     // Move the piece, replace old position with null
     boardList[col][row] = piece
-    boardList[oldX][oldY] = null
+    if (oldX >= 0 && oldY >= 0) {
+        boardList[oldX][oldY] = null
+    }
     piece.pos = arrayOf(col, row)
+
+    return reverseParseMove(piece, oldX, oldY, col, row)
+}
+
+fun reverseParseMove(piece: Piece, oldCol: Int, oldRow: Int, newCol: Int, newRow: Int): String {
+    val pieceString: String = when (piece) {
+        is Pawn -> "pawn"
+        is Bishop -> "bishop"
+        is King -> "king"
+        is Knight -> "knight"
+        is Queen -> "queen"
+        is Rook -> "rook"
+        else -> "unknown"
+    }
+
+    val oldPos = "${('a' + oldCol).toChar()}${8 - oldRow}" // eg 4, 3 becomes e4
+    val newPos = "${('a' + newCol).toChar()}${8 - newRow}"
+    return "$pieceString $oldPos -> $newPos"
 }
 
 fun getPiece(givenBoardState: MutableList<MutableList<Piece?>>,pos: Array<Int>) : Piece? {
@@ -127,6 +148,26 @@ private fun findWhiteKing(boardState: MutableList<MutableList<Piece?>>) : IntArr
     return intArrayOf(-1, -1)
 }
 
+private fun findBlackKing(boardState: MutableList<MutableList<Piece?>>): IntArray {
+    for (col in boardState.indices) {
+        for (row in boardState[col].indices) {
+            val piece: Piece? = boardState[col][row]
+            if (piece is King && piece.color == PieceColor.BLACK) {
+                return intArrayOf(col, row)
+            }
+        }
+    }
+    return intArrayOf(-1, -1)
+}
+
+fun whiteKingDead(): Boolean {
+    return findWhiteKing(boardList).contentEquals(intArrayOf(-1, -1))
+}
+
+fun blackKingDead(): Boolean {
+    return findBlackKing(boardList).contentEquals(intArrayOf(-1, -1))
+}
+
 fun createBoardCopy(): MutableList<MutableList<Piece?>> {
     // Create a new mutable list instead of referring to the original
     val boardCopy = mutableListOf<MutableList<Piece?>>()
@@ -141,4 +182,55 @@ fun createBoardCopy(): MutableList<MutableList<Piece?>> {
         boardCopy.add(innerBoardCopy)
     }
     return boardCopy
+}
+
+fun convertToIndex(input: String): IntArray {
+    var posX = -1
+    var posY = -1
+    for (char in input.lowercase()) {
+        if (char in 'a'..'z') {
+            posX = char - 'a'
+        } else {
+            posY = char - '1'
+        }
+    }
+    return intArrayOf(posX, posY)
+}
+
+fun initPiece(pieceString: String): Piece {
+    return when (pieceString.lowercase()) {
+        "pawn" -> {
+            val newPawn = Pawn(arrayOf(-1, -1), PieceColor.BLACK)
+            newPawn
+        }
+
+        "bishop" -> {
+            val newBishop = Bishop(arrayOf(-1, -1), PieceColor.BLACK)
+            newBishop
+        }
+
+        "king" -> {
+            val newKing = King(arrayOf(-1, -1), PieceColor.BLACK)
+            newKing
+        }
+
+        "knight" -> {
+            val newKnight = Knight(arrayOf(-1, -1), PieceColor.BLACK)
+            newKnight
+        }
+
+        "queen" -> {
+            val newQueen = Queen(arrayOf(-1, -1), PieceColor.BLACK)
+            newQueen
+        }
+
+        "rook" -> {
+            val newRook = Queen(arrayOf(-1, -1), PieceColor.BLACK)
+            newRook
+        }
+
+        else -> {
+            throw IllegalArgumentException("parsed input was not a valid piece: $pieceString")
+        }
+    }
 }

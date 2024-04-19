@@ -1,6 +1,7 @@
 package com.example.chessgpt
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -27,5 +28,12 @@ class MainActivity : AppCompatActivity() {
                 else -> null
             }
         }.attach()
+    }
+    fun win() {
+        Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show()
+    }
+
+    fun lose() {
+        Toast.makeText(this, "You Lose! :(", Toast.LENGTH_SHORT).show()
     }
 }

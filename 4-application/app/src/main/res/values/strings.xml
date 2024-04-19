@@ -12,4 +12,6 @@
     <string name="chess_board_description">Chess Board</string>
     <string name="king_white_description">White King</string>
     <string name="grid_cell">Grid Cell</string>
+    <string name="black_move_button_text">Make Black Move</string>
+    <string name="black_move_text_field_hint">Pawn e7 -> e5</string>
 </resources>
