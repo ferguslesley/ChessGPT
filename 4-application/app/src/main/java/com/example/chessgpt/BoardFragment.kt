@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,8 @@ import com.example.chessgpt.board.movePiece
 import com.example.chessgpt.board.placePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.board.whiteKingDead
+import com.example.chessgpt.databinding.ActivityMainBinding
+import com.example.chessgpt.databinding.FragmentBoardBinding
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
@@ -35,10 +38,9 @@ class BoardFragment : Fragment() {
     private lateinit var chessboardGrid: GridLayout
     private lateinit var boardImage: ImageView
     private lateinit var prompt: String
-
     private lateinit var playerMoves: MutableList<String>
     private lateinit var aiMoves: MutableList<String>
-
+    private lateinit var instructionText: TextView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,7 +51,6 @@ class BoardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val startButton: Button = view.findViewById(R.id.start_game)
         val endButton: Button = view.findViewById(R.id.end_game)
         val blackMoveButton: Button = view.findViewById(R.id.black_move_button)
@@ -58,6 +59,8 @@ class BoardFragment : Fragment() {
 
         chessboardGrid = view.findViewById(R.id.chessboard_grid)
         boardImage = view.findViewById(R.id.board_image)
+        instructionText = view.findViewById(R.id.instruction_text)
+        instructionText.text = getString(R.string.initial_instruction_text)
 
         startButton.setOnClickListener {
             onStartButtonClick()
@@ -78,6 +81,7 @@ class BoardFragment : Fragment() {
         setupBoard()
         drawPieces()
         setupAi()
+        instructionText.text = getString(R.string.pre_first_move_text)
     }
 
     private fun setupAi() {
@@ -145,12 +149,12 @@ class BoardFragment : Fragment() {
         val cellHeight = boardImage.height / 8
         if (blackKingDead()) {
             (activity as? MainActivity)?.win()
-            chessboardGrid.removeAllViews()
+            onEndButtonClick()
             return
         }
         if (whiteKingDead()) {
             (activity as? MainActivity)?.lose()
-            chessboardGrid.removeAllViews()
+            onEndButtonClick()
             return
         }
         for (i in 0 .. 7) {
@@ -206,6 +210,7 @@ class BoardFragment : Fragment() {
             // Draw the pieces in their new positions
             drawPieces()
             makeAiMove()
+            postMoveText()
         }
         chessboardGrid.addView(pieceImage)
     }
@@ -227,6 +232,7 @@ class BoardFragment : Fragment() {
             piece = initPiece(pieceToMove)
             placePiece(piece, arrayOf(pos[0], pos[1]))
             aiMoves.add(movePiece(piece, newPos[0], newPos[1]))
+            postAiMoveText()
             drawPieces()
         } catch (e: IndexOutOfBoundsException) {
             flipTable()
@@ -261,16 +267,25 @@ class BoardFragment : Fragment() {
                 "(it responded in a way that couldn't be parsed as a move)\n" +
                 "So, I guess you win! Congrats :)")
         builder.setPositiveButton("Yippee!") { _, _ ->
-            chessboardGrid.removeAllViews()
+            onEndButtonClick()
         }
         val alertDialog: AlertDialog = builder.create()
         alertDialog.setCancelable(false)
         alertDialog.show()
     }
 
+    private fun postMoveText() {
+        instructionText.text = getString(R.string.post_move_text)
+    }
+
+    private fun postAiMoveText() {
+        instructionText.text = getString(R.string.post_ai_move_text)
+    }
+
     private fun onEndButtonClick() {
         Toast.makeText(requireContext(), "Ending Game!", Toast.LENGTH_SHORT).show()
         chessboardGrid.removeAllViews()
+        instructionText.text = getString(R.string.initial_instruction_text)
     }
 
 }

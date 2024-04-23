@@ -14,4 +14,8 @@
     <string name="grid_cell">Grid Cell</string>
     <string name="black_move_button_text">Make Black Move</string>
     <string name="black_move_text_field_hint">Pawn e7 -> e5</string>
+    <string name="post_move_text">The AI is making its move…</string>
+    <string name="post_ai_move_text">Your move!</string>
+    <string name="initial_instruction_text">Press \'Start Game\' to begin!</string>
+    <string name="pre_first_move_text">Make your first move!</string>
 </resources>
