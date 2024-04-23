@@ -1,5 +1,6 @@
 package com.example.chessgpt
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import com.example.chessgpt.piece.PieceColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.IndexOutOfBoundsException
 import java.util.concurrent.Executors
 
 class BoardFragment : Fragment() {
@@ -81,15 +83,22 @@ class BoardFragment : Fragment() {
     private fun setupAi() {
         playerMoves = mutableListOf()
         aiMoves = mutableListOf()
-        prompt = "You are playing chess as black. (Your pieces are on rows 8 and 7 to start)\n" +
-                "Respond in this exact format:\n" +
-                "[chess piece][coordinate] -> [new coordinate]\n" +
-                "for example\n" +
-                "Knight d4 -> f5\n" +
-                "do not include any other symbols or letters. it must be this exact format.\n" +
-                "\n" +
-                "My first move will come after you respond with 'Ok.'\n" +
-                "After that, you will ONLY respond in the EXACT format described."
+//        prompt = "You are playing chess as black. (Your pieces are on rows 8 and 7 to start)\n" +
+//                "It is VITAL that you respond ONLY in this EXACT format:\n" +
+//                "[chess piece][coordinate] -> [new coordinate]\n" +
+//                "for example\n" +
+//                "Knight d4 -> f5\n" +
+//                "the arrow (->) is ESSENTIAL.\n" +
+//                "do not include any other symbols or letters. it must be this exact format.\n" +
+//                "\n" +
+//                "My first move will come after you respond with 'Ok.'\n" +
+//                "After that, you will ONLY respond in the EXACT format described.\n" +
+//                "If you think a move was invalid, do not mention it, just continue."
+        prompt = "You are playing as black in a chess game. Make your move.\n" +
+                "Response should under NO circumstances violate this format:\n" +
+                "[chess piece] [coordinate] -> [new coordinate]\n" +
+                "You must only change what's in parentheses.\n" +
+                "eg. Knight d4 -> f5"
         playerMoves.add(prompt)
         aiMoves.add("Ok.")
     }
@@ -202,16 +211,33 @@ class BoardFragment : Fragment() {
     }
 
     private fun parseMove(move: String) {
-        val pieceToMove = move.split(" ")[0]
-        val chessPos = move.split(" ")[1]
-        val newChessPos = move.split("-> ")[1]
-        val newPos = convertToIndex(newChessPos)
-        val pos = convertToIndex(chessPos)
-        val piece = initPiece(pieceToMove)
+        val pieceToMove: String
+        val chessPos: String
+        val newChessPos: String
+        val newPos: IntArray
+        val pos: IntArray
+        val piece: Piece
 
-        placePiece(piece, arrayOf(pos[0], pos[1]))
-        aiMoves.add(movePiece(piece, newPos[0], newPos[1]))
-        drawPieces()
+        try {
+            pieceToMove = move.split(" ")[0]
+            chessPos = move.split(" ")[1].slice(0 until 2)
+            newChessPos = move.split("-> ")[1].slice(0 until 2)
+            newPos = convertToIndex(newChessPos)
+            pos = convertToIndex(chessPos)
+            piece = initPiece(pieceToMove)
+            placePiece(piece, arrayOf(pos[0], pos[1]))
+            aiMoves.add(movePiece(piece, newPos[0], newPos[1]))
+            drawPieces()
+        } catch (e: IndexOutOfBoundsException) {
+            flipTable()
+            return
+        } catch (e: IllegalArgumentException) {
+            flipTable()
+            return
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            flipTable()
+            return
+        }
     }
 
     private fun makeAiMove() {
@@ -226,6 +252,20 @@ class BoardFragment : Fragment() {
                 parseMove(result)
             }
         }
+    }
+
+    private fun flipTable() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("ChatGPT Flipped the table!")
+        builder.setMessage("Sorry, Chat GPT decided to flip the table...\n" +
+                "(it responded in a way that couldn't be parsed as a move)\n" +
+                "So, I guess you win! Congrats :)")
+        builder.setPositiveButton("Yippee!") { _, _ ->
+            chessboardGrid.removeAllViews()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun onEndButtonClick() {

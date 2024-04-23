@@ -6,8 +6,8 @@ import com.example.chessgpt.board.isValid
 import com.example.chessgpt.board.wouldBeDangerous
 
 open class Piece (
-    private var orthogonalMovement: Int,
-    private val diagonalMovement: Int,
+    var orthogonalMovement: Int,
+    val diagonalMovement: Int,
     var pos: Array<Int>,
     val color: PieceColor,
 

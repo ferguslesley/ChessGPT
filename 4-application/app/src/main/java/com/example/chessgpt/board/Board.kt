@@ -73,6 +73,12 @@ fun movePiece(piece: Piece, col: Int, row: Int): String {
     }
     piece.pos = arrayOf(col, row)
 
+    // Set pawn movement back to 1
+    if (piece is Pawn && !piece.moved) {
+        piece.orthogonalMovement = 1
+        piece.moved = true
+    }
+
     return reverseParseMove(piece, oldX, oldY, col, row)
 }
 

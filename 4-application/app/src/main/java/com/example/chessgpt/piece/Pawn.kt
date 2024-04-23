@@ -2,34 +2,36 @@ package com.example.chessgpt.piece
 import com.example.chessgpt.R
 import com.example.chessgpt.board.*
 
-class Pawn(pos: Array<Int>, color: PieceColor) : Piece(1, 0, pos, color) {
+class Pawn(pos: Array<Int>, color: PieceColor) : Piece(2, 0, pos, color) {
+    var moved: Boolean = false
     init {
-        if (color == PieceColor.WHITE) {
-            image = R.drawable.pawn_white
+        image = if (color == PieceColor.WHITE) {
+            R.drawable.pawn_white
         } else {
-            image = R.drawable.pawn_black
+            R.drawable.pawn_black
         }
 
     }
     override fun calculateMoves() {
-        // Get forward orthogonal movement
         super.calculateMoves()
-        // TODO: Handle first move extra movement
         // TODO: Handle en passant
     }
 
     override fun getOrthogonals(givenBoardState: MutableList<MutableList<Piece?>>) {
 
-        if (this.color == PieceColor.WHITE) {
-            if (pos[1] + 1 < boardSize && getPiece(givenBoardState, arrayOf(pos[0], pos[1] + 1)) == null) {
-                moves.add(intArrayOf(pos[0], pos[1] + 1))
-            }
-        } else {
-            if (pos[1] - 1 >= 0 && getPiece(givenBoardState, arrayOf(pos[0], pos[1] - 1)) == null) {
-                moves.add(intArrayOf(pos[0], pos[1] + 1))
-            }
+        if (this.color == PieceColor.BLACK) {
+            orthogonalMovement = -orthogonalMovement
         }
 
+        for (i in 1..orthogonalMovement) {
+            if (pos[1] + i in 0 until boardSize) {
+                if (getPiece(givenBoardState, arrayOf(pos[0], pos[1] + i)) == null) {
+                    moves.add(intArrayOf(pos[0], pos[1] + i))
+                } else {
+                    break  // found piece, so can't go any further
+                }
+            }
+        }
     }
 
     override fun getDiagonals(givenBoardState: MutableList<MutableList<Piece?>>) {

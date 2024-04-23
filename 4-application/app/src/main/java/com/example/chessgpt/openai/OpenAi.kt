@@ -12,10 +12,24 @@ class OpenAi(private val userMessages: MutableList<String>, private val aiMessag
 
     private fun createMessagesArray(userMessages: MutableList<String>, aiMessages: MutableList<String>): JSONArray {
         val jsonArray = JSONArray()
-
+        val acceptableLength = 5
         val maxLength = maxOf(userMessages.size, aiMessages.size)
+        var start = 1
 
-        for (i in 0 until maxLength) {
+        // Reduce context token count
+        if (maxLength > acceptableLength) {
+            start = maxLength - acceptableLength
+        }
+
+        // Always include the initial prompt
+        val prompt = JSONObject()
+        prompt.put("role", "user")
+        prompt.put("content", userMessages[0])
+        jsonArray.put(prompt)
+
+        // Ignores the "ok" response by the ai, that's fine.
+
+        for (i in start until maxLength) {
             val userMessage = JSONObject()
             if (i < userMessages.size) {
                 userMessage.put("role", "user")
