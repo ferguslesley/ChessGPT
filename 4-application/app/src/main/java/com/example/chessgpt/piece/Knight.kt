@@ -1,15 +1,14 @@
 package com.example.chessgpt.piece
 
 import com.example.chessgpt.R
-import com.example.chessgpt.board.boardSize
 import com.example.chessgpt.board.isValid
 
 class Knight(pos : Array<Int>, color: PieceColor) : Piece(0, 0, pos, color) {
     init {
-        if (color == PieceColor.WHITE) {
-            image = R.drawable.knight_white
+        image = if (color == PieceColor.WHITE) {
+            R.drawable.knight_white
         } else {
-            image = R.drawable.knight_black
+            R.drawable.knight_black
         }
 
     }

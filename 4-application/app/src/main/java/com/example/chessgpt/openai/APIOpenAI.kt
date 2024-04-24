@@ -2,17 +2,14 @@ package com.example.chessgpt.openai
 
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.example.chessgpt.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.Properties
 
 fun sendRequest(messages: JSONArray, context: Context): String {
     val apiKey = getApiKey(context)

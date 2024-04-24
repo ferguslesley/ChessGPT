@@ -93,8 +93,8 @@ fun reverseParseMove(piece: Piece, oldCol: Int, oldRow: Int, newCol: Int, newRow
         else -> "unknown"
     }
 
-    val oldPos = "${('a' + oldCol).toChar()}${8 - oldRow}" // eg 4, 3 becomes e4
-    val newPos = "${('a' + newCol).toChar()}${8 - newRow}"
+    val oldPos = "${('a' + oldCol)}${8 - oldRow}" // eg 4, 3 becomes e4
+    val newPos = "${('a' + newCol)}${8 - newRow}"
     return "$pieceString $oldPos -> $newPos"
 }
 
@@ -103,12 +103,11 @@ fun getPiece(givenBoardState: MutableList<MutableList<Piece?>>,pos: Array<Int>) 
     return givenBoardState[col][row]
 }
 
-fun isValid(piece: Piece, newCol: Int, newRow: Int) : Boolean {
-    val valid = newRow in 0 until boardSize &&
+fun isValid(piece: Piece, newCol: Int, newRow: Int): Boolean {
+    return newRow in 0 until boardSize &&
             newCol in 0 until boardSize &&
             (boardList[newCol][newRow] == null ||
                     boardList[newCol][newRow]?.color?.oppositeColor() == piece.color)
-    return valid
 }
 
 fun wouldBeDangerous(oldPos: Array<Int>, newCol: Int, newRow: Int): Boolean {

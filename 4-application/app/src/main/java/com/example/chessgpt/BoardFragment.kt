@@ -22,8 +22,6 @@ import com.example.chessgpt.board.movePiece
 import com.example.chessgpt.board.placePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.board.whiteKingDead
-import com.example.chessgpt.databinding.ActivityMainBinding
-import com.example.chessgpt.databinding.FragmentBoardBinding
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor

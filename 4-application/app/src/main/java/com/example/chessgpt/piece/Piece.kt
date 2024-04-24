@@ -7,7 +7,7 @@ import com.example.chessgpt.board.wouldBeDangerous
 
 open class Piece (
     var orthogonalMovement: Int,
-    val diagonalMovement: Int,
+    private val diagonalMovement: Int,
     var pos: Array<Int>,
     val color: PieceColor,
 
