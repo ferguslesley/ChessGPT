@@ -276,7 +276,7 @@ open class Piece (
         // Iterator so that move can be removed while iterating
         val iterator = moves.iterator()
         while (iterator.hasNext()) {
-            val newPos = iterator.next()
+            val newPos: IntArray = iterator.next()
             if (wouldBeDangerous(pos, newPos[0], newPos[1])) {
                 iterator.remove()
             }

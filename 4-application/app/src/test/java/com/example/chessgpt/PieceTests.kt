@@ -34,7 +34,12 @@ class PieceTests {
         fun queenMovementTestSource(): Stream<Arguments> {
             return Stream.of(
                 // Corners should return 21
-                Arguments.of(arrayOf(0, 0), 21)
+                Arguments.of(arrayOf(0, 0), 21),
+                Arguments.of(arrayOf(0, 7), 21),
+                Arguments.of(arrayOf(7, 0), 21),
+                Arguments.of(arrayOf(7, 7), 21),
+
+                //
             )
         }
     }

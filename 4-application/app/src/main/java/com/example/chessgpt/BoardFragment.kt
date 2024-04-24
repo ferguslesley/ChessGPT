@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.chessgpt.board.blackKingDead
 import com.example.chessgpt.board.boardList
@@ -25,6 +26,7 @@ import com.example.chessgpt.board.whiteKingDead
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
+import com.example.chessgpt.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,11 +41,13 @@ class BoardFragment : Fragment() {
     private lateinit var playerMoves: MutableList<String>
     private lateinit var aiMoves: MutableList<String>
     private lateinit var instructionText: TextView
+    private lateinit var viewModel: UserViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         return inflater.inflate(R.layout.fragment_board, container, false)
     }
 
@@ -105,6 +109,11 @@ class BoardFragment : Fragment() {
         aiMoves.add("Ok.")
     }
 
+    /**
+     * Creates an invisible cell for each chess position.
+     * Ensures that even if a piece disappears, there will still be a cell
+     * and space on the image representing that position.
+     */
     private fun setupGrid() {
         val boardWidth = boardImage.width
         val boardHeight = boardImage.height
@@ -137,23 +146,27 @@ class BoardFragment : Fragment() {
         }
     }
 
-    private fun drawPieces() {
+    private fun drawPieces(): Boolean {
         setupGrid()
-        createPieces()
+        return createPieces()
     }
 
-    private fun createPieces() {
+    /**
+     * Creates an Image View for each piece in the board list
+     * Uses the empty cells as a guide for width and position.
+     */
+    private fun createPieces(): Boolean {
         val cellWidth = boardImage.width / 8
         val cellHeight = boardImage.height / 8
         if (blackKingDead()) {
             (activity as? MainActivity)?.win()
             onEndButtonClick()
-            return
+            return true
         }
         if (whiteKingDead()) {
             (activity as? MainActivity)?.lose()
             onEndButtonClick()
-            return
+            return true
         }
         for (i in 0 .. 7) {
             for (j in 0 .. 7) {
@@ -178,8 +191,13 @@ class BoardFragment : Fragment() {
                 }
             }
         }
+        return false
     }
 
+    /**
+     * Draws a dot for each legal move.
+     * Dot is set to move the piece when clicked.
+     */
     private fun onPieceClick(piece: Piece) {
         drawPieces()
         val validMoves : Array<IntArray> = piece.getMoves()
@@ -203,16 +221,31 @@ class BoardFragment : Fragment() {
         pieceImage.setImageResource(R.drawable.baseline_circle_24)
         pieceImage.visibility = View.VISIBLE
         pieceImage.setOnClickListener {
-            // Add move to openai conversation
-            playerMoves.add(movePiece(piece, pos[0], pos[1]))
-            // Draw the pieces in their new positions
-            drawPieces()
-            makeAiMove()
-            postMoveText()
+            makeMove(piece, pos[0], pos[1])
         }
         chessboardGrid.addView(pieceImage)
     }
 
+    private fun makeMove(piece: Piece, col: Int, row: Int) {
+        // Add move to openai conversation
+        playerMoves.add(movePiece(piece, col, row))
+        // Draw the pieces in their new positions
+        if (drawPieces()) {
+            return
+        }
+        makeAiMove()
+        postMoveText()
+    }
+
+    /**
+     * Converts a string in the format "piece location -> new location"
+     * to a board position and a piece instance.
+     * Creates a piece at that position, overwriting whatever is currently there,
+     * then moves it to the new position.
+     * This means if the AI moves a piece that doesn't exist on that
+     * location, it will just spawn a new piece
+     * (even if it overwrites one of white's!)
+     */
     private fun parseMove(move: String) {
         val pieceToMove: String
         val chessPos: String
@@ -244,6 +277,12 @@ class BoardFragment : Fragment() {
         }
     }
 
+    /**
+     * Launches a new thread which sends a request to the
+     * OpenAI http API containing the past 5 messages
+     * from the user and AI.
+     * Parses the response to the function to move pieces.
+     */
     private fun makeAiMove() {
         val openAiTask = OpenAi(playerMoves, aiMoves, this.requireContext())
 

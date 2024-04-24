@@ -18,4 +18,7 @@
     <string name="post_ai_move_text">Your move!</string>
     <string name="initial_instruction_text">Press \'Start Game\' to begin!</string>
     <string name="pre_first_move_text">Make your first move!</string>
+    <string name="stats_placeholder">Stats: %1$d</string>
+    <string name="wins_placeholder">Wins: %1$d</string>
+    <string name="losses_placeholder">Losses: %1$d</string>
 </resources>
