@@ -2,7 +2,11 @@ package com.example.chessgpt.openai
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import com.example.chessgpt.MainActivity
 import com.example.chessgpt.R
+import com.example.chessgpt.UserViewModel
+import com.example.chessgpt.data.db
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -12,7 +16,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 fun sendRequest(messages: JSONArray, context: Context): String {
-    val apiKey = getApiKey(context)
+    val apiKey = getApiKey()
     val model = "gpt-3.5-turbo-0125"
     val maxTokens = 10
 
@@ -72,6 +76,7 @@ fun extractContent(jsonString: String): String {
     return ""
 }
 
-fun getApiKey(context: Context): String {
-    return context.getString(R.string.api_key)
+fun getApiKey(): String {
+    return db.userDao().getAll().last().apiKey
+
 }

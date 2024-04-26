@@ -1,8 +1,11 @@
 package com.example.chessgpt
 
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +23,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Properties
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
@@ -63,12 +69,14 @@ class MainActivity : AppCompatActivity() {
             if (users.isNotEmpty()) {
                 user = users.last()
             } else {
-                user = User(0, 0, 0)
+                user = User(0, 0, 0, "")
                 userDao.newUser(user)
             }
 
             withContext(Dispatchers.Main) {
-
+                if (user.apiKey.isEmpty()) {
+                    showApiKeyAlert()
+                }
                 // Create view model to pass data to fragments
                 viewModel = ViewModelProvider(lifecycleOwner)[UserViewModel::class.java]
                 viewModel.setUser(user)
@@ -93,6 +101,25 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "You Lose! :(", Toast.LENGTH_SHORT).show()
         viewModel.incrementLosses()
         updateUser()
+    }
+
+    private fun showApiKeyAlert() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Please enter your OpenAI API key")
+        val input = EditText(this)
+        alertDialog.setView(input)
+        alertDialog.setPositiveButton("Done") { dialog, _ ->
+            val apiKey = input.text.toString().trim()
+            saveApiKey(apiKey)
+            dialog.dismiss()
+        }
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
+    private fun saveApiKey(apiKey: String) {
+            viewModel.setApiKey(apiKey)
+            updateUser()
     }
 }
 
@@ -120,6 +147,14 @@ class UserViewModel : ViewModel() {
         val currentUserVal = currentUser.value
         currentUserVal?.let {
             it.losses++
+            currentUser.value = it
+        }
+    }
+
+    fun setApiKey(givenApiKey: String) {
+        val currentUserVal = currentUser.value
+        currentUserVal?.let {
+            it.apiKey = givenApiKey
             currentUser.value = it
         }
     }

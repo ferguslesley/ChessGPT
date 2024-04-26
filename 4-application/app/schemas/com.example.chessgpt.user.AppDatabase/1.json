@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fe632d3037f4697a3338b5cf6987e6e0",
+    "identityHash": "90348f8f6d60c78efaaa7131ee2b91d1",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `wins` INTEGER NOT NULL, `losses` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `wins` INTEGER NOT NULL, `losses` INTEGER NOT NULL, `api_key` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "userId",
@@ -25,6 +25,12 @@
             "columnName": "losses",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "apiKey",
+            "columnName": "api_key",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -40,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fe632d3037f4697a3338b5cf6987e6e0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '90348f8f6d60c78efaaa7131ee2b91d1')"
     ]
   }
 }

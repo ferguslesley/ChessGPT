@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class User (
     @PrimaryKey(autoGenerate = true) val userId: Int,
     @ColumnInfo(name = "wins") var wins: Int,
-    @ColumnInfo(name = "losses") var losses: Int
+    @ColumnInfo(name = "losses") var losses: Int,
+    @ColumnInfo(name = "api_key") var apiKey: String
 )

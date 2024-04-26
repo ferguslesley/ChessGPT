@@ -26,7 +26,6 @@ import com.example.chessgpt.board.whiteKingDead
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
-import com.example.chessgpt.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,7 +56,6 @@ class BoardFragment : Fragment() {
         val endButton: Button = view.findViewById(R.id.end_game)
         val blackMoveButton: Button = view.findViewById(R.id.black_move_button)
         val blackMoveText: EditText = view.findViewById(R.id.black_move_text)
-
 
         chessboardGrid = view.findViewById(R.id.chessboard_grid)
         boardImage = view.findViewById(R.id.board_image)
