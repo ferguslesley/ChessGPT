@@ -20,6 +20,11 @@ fun sendRequest(messages: JSONArray, context: Context): String {
     val model = "gpt-3.5-turbo-0125"
     val maxTokens = 10
 
+    val tokenManager = TokenManager(context.getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE))
+
+    if (!tokenManager.hasTokensLeft()) {
+        return "Error: No more tokens left for today!"
+    }
     val url = URL("https://api.openai.com/v1/chat/completions")
     val connection = url.openConnection() as HttpURLConnection
 
@@ -46,6 +51,8 @@ fun sendRequest(messages: JSONArray, context: Context): String {
             response.append(line)
         }
         reader.close()
+        // Deduct tokens used to make request from user's quota
+        tokenManager.deductTokens(extractUsage(response.toString()).toInt())
         Log.i("OpenAI", "Messages: $messages")
         Log.i("OpenAI", "Response: ${extractContent(response.toString())}")
         return extractContent(response.toString())
@@ -70,6 +77,18 @@ fun extractContent(jsonString: String): String {
             val messageObject = firstChoice.getJSONObject("message")
             return messageObject.getString("content")
         }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return ""
+}
+
+fun extractUsage(jsonString: String): String {
+    try {
+        val jsonObject = JSONObject(jsonString)
+        val usages = jsonObject.getJSONObject("usage")
+        return usages.getString("total_tokens")
+
     } catch (e: Exception) {
         e.printStackTrace()
     }

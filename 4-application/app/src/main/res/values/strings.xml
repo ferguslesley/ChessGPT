@@ -27,4 +27,7 @@
     <string name="save_button_text">Save</string>
     <string name="settings_button_text">Settings</string>
     <string name="back_button_text">Back</string>
+    <string name="api_key_alert_text">%1$s</string>
+    <string name="tokens_left">Tokens Left: %1$d</string>
+    <string name="refresh_button_text">Refresh</string>
 </resources>

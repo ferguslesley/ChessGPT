@@ -251,6 +251,7 @@ class BoardFragment : Fragment() {
         val pos: IntArray
         val piece: Piece
 
+        // Check if response (without spaces) is an api error
         if (move.replace("\\s".toRegex(), "")
                 .startsWith("Error:{\"error\":{\"message\":\"IncorrectAPIkeyprovided")) {
             // Wrong api key
@@ -260,6 +261,13 @@ class BoardFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
             (activity as? MainActivity)?.showApiKeyAlert()
+            onEndButtonClick()
+            return
+        }
+
+        if (move.replace("\\s".toRegex(), "")
+                .startsWith("Error:Nomoretokensleftfortoday!")) {
+            (activity as? MainActivity)?.showTokenLimitAlert()
             onEndButtonClick()
             return
         }

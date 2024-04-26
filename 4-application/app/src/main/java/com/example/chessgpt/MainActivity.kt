@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.setTitle("Please enter your OpenAI API key")
         val input = EditText(this)
+        input.setText(getString(R.string.api_key_alert_text, viewModel.currentUser.value!!.apiKey))
         alertDialog.setView(input)
         alertDialog.setPositiveButton("Done") { dialog, _ ->
             val apiKey = input.text.toString().trim()
@@ -124,6 +125,21 @@ class MainActivity : AppCompatActivity() {
         }
         alertDialog.setCancelable(false)
         alertDialog.show()
+    }
+
+    fun showTokenLimitAlert() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Sorry, token limit reached!")
+        alertDialog.setMessage("You've used all your tokens for the day. They will refresh tomorrow!")
+        alertDialog.setPositiveButton("Buy more tokens (w.i.p.)") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.setNegativeButton("Ok :(") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+
     }
 
     private fun saveApiKey(apiKey: String) {
