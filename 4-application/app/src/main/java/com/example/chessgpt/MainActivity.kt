@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         updateUser()
     }
 
-    private fun showApiKeyAlert() {
+    fun showApiKeyAlert() {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.setTitle("Please enter your OpenAI API key")
         val input = EditText(this)

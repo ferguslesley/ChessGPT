@@ -251,6 +251,19 @@ class BoardFragment : Fragment() {
         val pos: IntArray
         val piece: Piece
 
+        if (move.replace("\\s".toRegex(), "")
+                .startsWith("Error:{\"error\":{\"message\":\"IncorrectAPIkeyprovided")) {
+            // Wrong api key
+            Toast.makeText(
+                requireContext(),
+                "The API key you provided is not correct.",
+                Toast.LENGTH_SHORT
+            ).show()
+            (activity as? MainActivity)?.showApiKeyAlert()
+            onEndButtonClick()
+            return
+        }
+
         try {
             pieceToMove = move.split(" ")[0]
             chessPos = move.split(" ")[1].slice(0 until 2)
