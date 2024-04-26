@@ -66,25 +66,13 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
-            android:id="@+id/black_move_button"
+            android:id="@+id/settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/black_move_button_text"
+            android:text="@string/settings_button_text"
+            app:layout_constraintBottom_toTopOf="@+id/board_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/instruction_text" />
-
-        <EditText
-            android:id="@+id/black_move_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:ems="10"
-            app:layout_constraintBottom_toBottomOf="@+id/black_move_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/instruction_text"
-            android:autofillHints=""
-            android:hint="@string/black_move_text_field_hint"
-            android:inputType="text" />
+            app:layout_constraintTop_toBottomOf="@+id/instruction_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

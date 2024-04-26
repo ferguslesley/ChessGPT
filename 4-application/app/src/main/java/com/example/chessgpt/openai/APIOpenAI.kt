@@ -76,6 +76,10 @@ fun extractContent(jsonString: String): String {
     return ""
 }
 
+/**
+ * Gets api key from database.
+ * Cannot be called from main thread.
+ */
 fun getApiKey(): String {
     return db.userDao().getAll().last().apiKey
 

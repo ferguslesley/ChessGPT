@@ -21,4 +21,10 @@
     <string name="stats_placeholder">Stats: %1$d</string>
     <string name="wins_placeholder">Wins: %1$d</string>
     <string name="losses_placeholder">Losses: %1$d</string>
+    <string name="api_key">Your OpenAI API key</string>
+    <string name="settings_api_key_label">Your OpenAI API Key:</string>
+    <string name="edit_button_text">Edit</string>
+    <string name="save_button_text">Save</string>
+    <string name="settings_button_text">Settings</string>
+    <string name="back_button_text">Back</string>
 </resources>

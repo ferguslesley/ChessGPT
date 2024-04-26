@@ -1,6 +1,7 @@
 package com.example.chessgpt
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -54,8 +55,7 @@ class BoardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val startButton: Button = view.findViewById(R.id.start_game)
         val endButton: Button = view.findViewById(R.id.end_game)
-        val blackMoveButton: Button = view.findViewById(R.id.black_move_button)
-        val blackMoveText: EditText = view.findViewById(R.id.black_move_text)
+        val settingsButton: Button = view.findViewById(R.id.settings_button)
 
         chessboardGrid = view.findViewById(R.id.chessboard_grid)
         boardImage = view.findViewById(R.id.board_image)
@@ -70,9 +70,8 @@ class BoardFragment : Fragment() {
             onEndButtonClick()
         }
 
-        blackMoveButton.setOnClickListener {
-            val userInput = blackMoveText.text.toString()
-            parseMove(userInput)
+        settingsButton.setOnClickListener {
+            onSettingsButtonClick()
         }
     }
 
@@ -315,6 +314,11 @@ class BoardFragment : Fragment() {
 
     private fun postAiMoveText() {
         instructionText.text = getString(R.string.post_ai_move_text)
+    }
+
+    private fun onSettingsButtonClick() {
+        val intent = Intent(requireContext(), SettingsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onEndButtonClick() {

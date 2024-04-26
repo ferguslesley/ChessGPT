@@ -56,6 +56,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun saveSettings() {
+        val apiKey = intent.getStringExtra("API_KEY")
+        if (!apiKey.isNullOrEmpty()) {
+            viewModel.setApiKey(apiKey)
+            updateUser()
+        }
+    }
+
     private fun setupDb() {
         lifecycleScope.launch(Dispatchers.IO) {
             buildDb(applicationContext)
@@ -80,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 // Create view model to pass data to fragments
                 viewModel = ViewModelProvider(lifecycleOwner)[UserViewModel::class.java]
                 viewModel.setUser(user)
+                saveSettings()  // Save settings from settings activity, if any
             }
         }
     }
