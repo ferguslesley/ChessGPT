@@ -21,8 +21,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var editButton: Button
     private lateinit var backButton: Button
     private lateinit var apiKey: String
-    private lateinit var currentUser: User
-    private lateinit var userDao: UserDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +39,19 @@ class SettingsActivity : AppCompatActivity() {
         editButton.setOnClickListener {
             if (apiKeyEditText.isEnabled) {
                 // User clicked Save button
-                // Save api key
                 onSaveButtonClick()
             } else {
                 // User clicked Edit button
-                apiKeyEditText.isEnabled = true
-                apiKeyEditText.requestFocus()
-                editButton.text = getString(R.string.save_button_text)
+                onEditButtonClick()
             }
         }
 
+        apiKeyEditText.setOnClickListener {
+            onEditButtonClick()
+        }
+
         backButton.setOnClickListener {
+            // Send data to main activity where it will update the database with the new info
             val intent = Intent(this, MainActivity::class.java).apply {
                 putExtra("API_KEY", apiKeyEditText.text.toString().trim())
             }
@@ -65,6 +65,13 @@ class SettingsActivity : AppCompatActivity() {
         apiKeyEditText.isEnabled = false
         editButton.text = getString(R.string.edit_button_text)
     }
+
+    private fun onEditButtonClick() {
+        apiKeyEditText.isEnabled = true
+        apiKeyEditText.requestFocus()
+        editButton.text = getString(R.string.save_button_text)
+    }
+
     private fun updateEditText() {
         if (apiKey.isNotEmpty()) {
             apiKeyEditText.setText(apiKey)
