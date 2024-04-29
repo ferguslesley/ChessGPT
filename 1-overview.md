@@ -13,7 +13,7 @@ The graphics for the board and pieces will be simple 2d vector assets. There wil
 
 ### Who is the app for?
 
-Chess GPT is for people who are tired of playing chess seriously, and instead want to play a random, unpredictable version of the game. Chess is a very competitive community, there is clear demand for a casual mode of chess, shown by videos getting millions of views (Rozman, 2023)
+Chess GPT is for people who are tired of playing chess seriously, and instead want to play a random, unpredictable version of the game. Chess is a very competitive community, there is clear demand for a casual mode of chess, shown by videos getting millions of views (Rozman, 2023).
 
 ### Why am I making this app?
 
