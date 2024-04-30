@@ -1,5 +1,5 @@
 **Mobile Development 2023/24 Portfolio**
-# Overview (198 words)
+# Overview
 
 Student ID: `lesleyf`
 
@@ -13,11 +13,15 @@ The graphics for the board and pieces will be simple 2d vector assets. There wil
 
 ### Who is the app for?
 
-Chess GPT is for people who are tired of playing chess seriously, and instead want to play a random, unpredictable version of the game. Chess is a very competitive community, so this app exists to provide entertainment without being mentally taxing. 
+Chess GPT is for people who are tired of playing chess seriously, and instead want to play a random, unpredictable version of the game. Chess is a very competitive community, there is clear demand for a casual mode of chess, shown by videos getting millions of views (Rozman, 2023).
 
 ### Why am I making this app?
 
 LLMs are fascinating, especially when they go wrong. Seeing ChatGPT make absurd chess moves made me realise it would provide entertainment value to a user to see a game of chess played out in real time against a LLM.
+
+### References
+
+Rozman, L. (2023) Chatgpt vs Martin Bot: Insane chess, YouTube. Available at: https://www.youtube.com/watch?v=hKzsmv6B8aY (Accessed: 29 April 2024). 
 
 <!-- 
 Comments from Sandy:
