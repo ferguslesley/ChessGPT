@@ -62,6 +62,13 @@ fun placePiece(piece: Piece, pos: Array<Int>) {
     piece.pos = pos
 }
 
+/**
+ * Moves a piece on the board list data structure
+ * @param piece The piece being moved
+ * @param col Column/X coordinate of new position
+ * @param row Row/Y coordinate of new position
+ * @return Returns the move expressed in the format Piece OldPos -> NewPos
+ */
 fun movePiece(piece: Piece, col: Int, row: Int): String {
     val oldX = piece.pos[0]
     val oldY = piece.pos[1]

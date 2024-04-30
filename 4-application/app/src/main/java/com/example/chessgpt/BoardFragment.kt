@@ -16,6 +16,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.chessgpt.board.blackKingDead
 import com.example.chessgpt.board.boardList
 import com.example.chessgpt.board.convertToIndex
@@ -24,6 +26,7 @@ import com.example.chessgpt.board.movePiece
 import com.example.chessgpt.board.placePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.board.whiteKingDead
+import com.example.chessgpt.moves.MovesAdapter
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
@@ -42,6 +45,9 @@ class BoardFragment : Fragment() {
     private lateinit var aiMoves: MutableList<String>
     private lateinit var instructionText: TextView
     private lateinit var viewModel: UserViewModel
+    private lateinit var formattedMoves: MutableList<Pair<String, String>>
+    private lateinit var pairBuilder: MutableList<String>
+    private lateinit var movesRecyclerView: RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +68,20 @@ class BoardFragment : Fragment() {
         instructionText = view.findViewById(R.id.instruction_text)
         instructionText.text = getString(R.string.initial_instruction_text)
 
+        playerMoves = mutableListOf()
+        aiMoves = mutableListOf()
+
+        pairBuilder = mutableListOf()
+        formattedMoves = mutableListOf()
+
+        movesRecyclerView = view.findViewById(R.id.player_moves_recycler_view)
+        movesRecyclerView.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            true
+        )
+        movesRecyclerView.adapter = MovesAdapter(formattedMoves)
+
         startButton.setOnClickListener {
             onStartButtonClick()
         }
@@ -80,6 +100,8 @@ class BoardFragment : Fragment() {
         setupBoard()
         drawPieces()
         setupAi()
+        formattedMoves = mutableListOf()
+        movesRecyclerView.adapter = MovesAdapter(formattedMoves)
         instructionText.text = getString(R.string.pre_first_move_text)
     }
 
@@ -224,12 +246,18 @@ class BoardFragment : Fragment() {
     }
 
     private fun makeMove(piece: Piece, col: Int, row: Int) {
-        // Add move to openai conversation
-        playerMoves.add(movePiece(piece, col, row))
+        // Make move
+        val move: String = movePiece(piece, col, row)
+
+        // Update recorded moves
+        playerMoves.add(move)
+        pairBuilder.add(move)
+
         // Draw the pieces in their new positions
         if (drawPieces()) {
             return
         }
+
         makeAiMove()
         postMoveText()
     }
@@ -280,7 +308,16 @@ class BoardFragment : Fragment() {
             pos = convertToIndex(chessPos)
             piece = initPiece(pieceToMove)
             placePiece(piece, arrayOf(pos[0], pos[1]))
-            aiMoves.add(movePiece(piece, newPos[0], newPos[1]))
+            val moveNotation: String = movePiece(piece, newPos[0], newPos[1])
+            aiMoves.add(moveNotation)
+            pairBuilder.add(moveNotation)
+            formattedMoves.add(Pair(pairBuilder[0], pairBuilder[1]))
+            pairBuilder = mutableListOf()
+            // Update recycler view
+            movesRecyclerView.adapter!!.notifyItemInserted(formattedMoves.size)
+            movesRecyclerView.postDelayed({
+                movesRecyclerView.smoothScrollToPosition(formattedMoves.size - 1)
+            }, 100)
             postAiMoveText()
             drawPieces()
         } catch (e: IndexOutOfBoundsException) {

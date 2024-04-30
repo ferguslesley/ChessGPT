@@ -4,6 +4,10 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import java.util.Calendar
 
+/**
+ * Uses shared preferences to track the number of tokens used by the user.
+ * The user has a daily allowance.
+ */
 class TokenManager(private val sharedPreferences: SharedPreferences) {
     companion object {
         private const val PREF_KEY_TOKEN_COUNT = "token_count"
