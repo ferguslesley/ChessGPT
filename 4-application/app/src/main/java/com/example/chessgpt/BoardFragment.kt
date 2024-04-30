@@ -293,9 +293,23 @@ class BoardFragment : Fragment() {
             return
         }
 
+        // Check if run out of tokens for the day (app limit)
         if (move.replace("\\s".toRegex(), "")
                 .startsWith("Error:Nomoretokensleftfortoday!")) {
             (activity as? MainActivity)?.showTokenLimitAlert()
+            onEndButtonClick()
+            return
+        }
+
+        // Check if run out of tokens for key (api key limit)
+        if (move.replace("\\s".toRegex(), "")
+                .startsWith("Error:{\"error\":{\"message\":\"Youexceededyourcurrentquota")) {
+            Toast.makeText(
+                requireContext(),
+                "This API key doesn't have enough quota.",
+                Toast.LENGTH_SHORT
+            ).show()
+            (activity as? MainActivity)?.showApiQuotaAlert()
             onEndButtonClick()
             return
         }

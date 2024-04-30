@@ -146,6 +146,22 @@ class MainActivity : AppCompatActivity() {
             viewModel.setApiKey(apiKey)
             updateUser()
     }
+
+    fun showApiQuotaAlert() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Not enough quota")
+        alertDialog.setMessage("Sorry, your API key doesn't have enough quota. " +
+                "Check your plan and billing details, make sure you have access to gpt3.5-turbo. " +
+                "A game of Chess GPT costs around $0.001 worth of tokens.")
+        alertDialog.setPositiveButton("Buy tokens (w.i.p)") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.setNegativeButton("Ok :(") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
 }
 
 // In your shared ViewModel
