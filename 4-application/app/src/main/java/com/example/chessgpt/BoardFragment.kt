@@ -27,6 +27,8 @@ import com.example.chessgpt.board.placePiece
 import com.example.chessgpt.board.setupBoard
 import com.example.chessgpt.board.whiteKingDead
 import com.example.chessgpt.moves.MovesAdapter
+import com.example.chessgpt.openai.ApiService
+import com.example.chessgpt.openai.ApiServiceImpl
 import com.example.chessgpt.openai.OpenAi
 import com.example.chessgpt.piece.Piece
 import com.example.chessgpt.piece.PieceColor
@@ -48,6 +50,7 @@ class BoardFragment : Fragment() {
     private lateinit var formattedMoves: MutableList<Pair<String, String>>
     private lateinit var pairBuilder: MutableList<String>
     private lateinit var movesRecyclerView: RecyclerView
+    private lateinit var apiService: ApiService
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,6 +84,8 @@ class BoardFragment : Fragment() {
             true
         )
         movesRecyclerView.adapter = MovesAdapter(formattedMoves)
+
+        apiService = ApiServiceImpl()
 
         startButton.setOnClickListener {
             onStartButtonClick()
@@ -353,7 +358,7 @@ class BoardFragment : Fragment() {
      * Parses the response to the function to move pieces.
      */
     private fun makeAiMove() {
-        val openAiTask = OpenAi(playerMoves, aiMoves, this.requireContext())
+        val openAiTask = OpenAi(playerMoves, aiMoves, this.requireContext(), this.apiService)
 
         var result: String
 

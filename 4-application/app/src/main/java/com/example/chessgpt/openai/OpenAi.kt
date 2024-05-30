@@ -5,9 +5,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.Callable
 
-class OpenAi(private val userMessages: MutableList<String>, private val aiMessages: MutableList<String>, private val context: Context) : Callable<String> {
+class OpenAi(
+    private val userMessages: MutableList<String>,
+    private val aiMessages: MutableList<String>,
+    private val context: Context,
+    private val apiService: ApiService) : Callable<String> {
     override fun call(): String {
-        return sendRequest(createMessagesArray(userMessages, aiMessages), context)
+        return apiService.sendRequest(createMessagesArray(userMessages, aiMessages), context)
     }
 
     private fun createMessagesArray(userMessages: MutableList<String>, aiMessages: MutableList<String>): JSONArray {

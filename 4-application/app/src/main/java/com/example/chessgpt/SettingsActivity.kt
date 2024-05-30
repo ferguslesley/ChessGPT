@@ -5,12 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.chessgpt.data.db
-import com.example.chessgpt.openai.getApiKey
-import com.example.chessgpt.user.User
-import com.example.chessgpt.user.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
         editButton = findViewById(R.id.edit_button)
         backButton = findViewById(R.id.back_button)
         lifecycleScope.launch(Dispatchers.IO) {
-            apiKey = getApiKey()
+            apiKey = db.userDao().getAll().last().apiKey
             withContext(Dispatchers.Main) {
                 updateEditText()
             }

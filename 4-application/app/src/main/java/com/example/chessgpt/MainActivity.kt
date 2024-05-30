@@ -82,13 +82,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             withContext(Dispatchers.Main) {
-                if (user.apiKey.isEmpty()) {
-                    showApiKeyAlert()
-                }
                 // Create view model to pass data to fragments
                 viewModel = ViewModelProvider(lifecycleOwner)[UserViewModel::class.java]
                 viewModel.setUser(user)
+
+                if (user.apiKey.isEmpty()) {
+                    showApiKeyAlert()
+                }
                 saveSettings()  // Save settings from settings activity, if any
+
             }
         }
     }
