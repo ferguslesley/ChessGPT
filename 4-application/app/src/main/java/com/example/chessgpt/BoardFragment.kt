@@ -50,7 +50,7 @@ class BoardFragment : Fragment() {
     private lateinit var formattedMoves: MutableList<Pair<String, String>>
     private lateinit var pairBuilder: MutableList<String>
     private lateinit var movesRecyclerView: RecyclerView
-    private lateinit var apiService: ApiService
+    lateinit var apiService: ApiService
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

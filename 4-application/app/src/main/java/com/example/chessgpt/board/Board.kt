@@ -73,6 +73,26 @@ fun movePiece(piece: Piece, col: Int, row: Int): String {
     val oldX = piece.pos[0]
     val oldY = piece.pos[1]
 
+    // If pawn moves diagonally to an empty square,
+    // en passant means adjacent pawn is taken
+    if (piece is Pawn) {
+        if (col == oldX + 1) {
+            // Pawn has moved left
+            // Anything in the new pos?
+            if (boardList[col][row] == null) {
+                // piece to the left is taken
+                boardList[col][oldY] = null
+            }
+        } else if (col == oldX - 1) {
+            // Pawn has moved right
+            // Anything in the new pos?
+            if (boardList[col][row] == null) {
+                // piece to the right is taken
+                boardList[col][oldY] = null
+            }
+        }
+    }
+
     // Move the piece, replace old position with null
     boardList[col][row] = piece
     if (oldX >= 0 && oldY >= 0) {
@@ -80,10 +100,18 @@ fun movePiece(piece: Piece, col: Int, row: Int): String {
     }
     piece.pos = arrayOf(col, row)
 
+
+
+    // Set all pawn's "just moved" flag to false
+    resetJustMoved()
+
     // Set pawn movement back to 1
     if (piece is Pawn && !piece.moved) {
         piece.orthogonalMovement = 1
         piece.moved = true
+        if (piece.pos[1] - oldY == 2) {
+            piece.justMoved = true
+        }
     }
 
     return reverseParseMove(piece, oldX, oldY, col, row)
@@ -103,6 +131,22 @@ fun reverseParseMove(piece: Piece, oldCol: Int, oldRow: Int, newCol: Int, newRow
     val oldPos = "${('a' + oldCol)}${8 - oldRow}" // eg 4, 3 becomes e4
     val newPos = "${('a' + newCol)}${8 - newRow}"
     return "$pieceString $oldPos -> $newPos"
+}
+
+/**
+ * Reset all the pawns "just moved" flag
+ * after a piece moves and it isn't an en passant capture,
+ * pieces can no longer capture en passant
+ */
+fun resetJustMoved() {
+    for (col in 0 until boardSize) {
+        for (row in 0 until boardSize) {
+            val piece: Piece? = boardList[col][row]
+            if (piece is Pawn) {
+                piece.justMoved = false
+            }
+        }
+    }
 }
 
 fun getPiece(givenBoardState: MutableList<MutableList<Piece?>>,pos: Array<Int>) : Piece? {

@@ -4,6 +4,7 @@ import com.example.chessgpt.board.*
 
 class Pawn(pos: Array<Int>, color: PieceColor) : Piece(2, 0, pos, color) {
     var moved: Boolean = false
+    var justMoved: Boolean = false
     init {
         image = if (color == PieceColor.WHITE) {
             R.drawable.pawn_white
@@ -14,7 +15,7 @@ class Pawn(pos: Array<Int>, color: PieceColor) : Piece(2, 0, pos, color) {
     }
     override fun calculateMoves() {
         super.calculateMoves()
-        // TODO: Handle en passant
+        enPassant()
     }
 
     override fun getOrthogonals(givenBoardState: MutableList<MutableList<Piece?>>) {
@@ -68,6 +69,25 @@ class Pawn(pos: Array<Int>, color: PieceColor) : Piece(2, 0, pos, color) {
                     moves.add(upRight.toIntArray())
                 }
             }
+        }
+    }
+
+    private fun enPassant() {
+        var adjacentPieceR: Piece? = null
+        var adjacentPieceL: Piece? = null
+        if (pos[0] + 1 < boardSize) {
+            adjacentPieceR = boardList[pos[0] + 1][pos[1]]
+        }
+        if (pos[0] - 1 >= 0) {
+            adjacentPieceL = boardList[pos[0] - 1][pos[1]]
+        }
+
+        if (adjacentPieceR is Pawn && adjacentPieceR.justMoved) {
+            moves.add(intArrayOf(pos[0] + 1, pos[1] + 1))
+        }
+
+        if (adjacentPieceL is Pawn && adjacentPieceL.justMoved) {
+            moves.add(intArrayOf(pos[0] - 1, pos[1] + 1))
         }
     }
 }
